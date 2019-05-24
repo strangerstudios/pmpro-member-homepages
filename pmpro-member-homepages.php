@@ -16,10 +16,14 @@ function pmpromh_login_redirect($redirect_to, $request, $user)
 	//check level
 	if(!empty($user) && !empty($user->ID) && function_exists('pmpro_getMembershipLevelForUser')) {
 		$level = pmpro_getMembershipLevelForUser($user->ID);
-		$member_homepage_id = pmpromh_getHomepageForLevel($level->id);
+	
+		if(!empty($level) && isset($level->id))
+		{
+			$member_homepage_id = pmpromh_getHomepageForLevel($level->id);
 		
-		if(!empty($member_homepage_id)) {
-			$redirect_to = get_permalink($member_homepage_id);
+			if(!empty($member_homepage_id)) {
+				$redirect_to = get_permalink($member_homepage_id);
+			}
 		}
 	}
 
