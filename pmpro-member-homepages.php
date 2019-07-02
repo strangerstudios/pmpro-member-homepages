@@ -17,7 +17,7 @@ Domain Path: /languages
 function pmpromh_load_plugin_text_domain() {
 	load_plugin_textdomain( 'pmpro-member-homepages', false, basename( dirname( __FILE__ ) ) . '/languages' ); 
 }
-add_action( 'plugins_loaded', 'pmpromh_load_plugin_text_domain' ); 
+add_action( 'init', 'pmpromh_load_plugin_text_domain' ); 
 
 /*
 	Function to redirect member on login to their membership level's homepage
