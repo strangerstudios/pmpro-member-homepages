@@ -10,6 +10,8 @@ Author URI: https://paidmembershipspro.com
 @package PMPro
  */
 
+define( 'PMPRO_MEMBER_HOMEPAGES_VERSION', '.2' );
+
 /**
  * Redirect member on login to their membership level's homepage
  *
