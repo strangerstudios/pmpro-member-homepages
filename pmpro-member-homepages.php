@@ -45,8 +45,8 @@ function pmpromh_template_redirect_homepage() {
 	// is there a user to check?
 	if ( ! empty( $current_user->ID ) && is_front_page() ) {
 		$member_homepage_id = pmpromh_getHomepageForLevel();
-		if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) ) {
-			wp_redirect( get_permalink( $member_homepage_id ) );
+		if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && pmpromh_allow_homepage_redirect() ) {
+			wp_safe_redirect( get_permalink( $member_homepage_id ) );
 			exit;
 		}
 	}
@@ -80,34 +80,67 @@ function pmpromh_getHomepageForLevel( $level_id = null ) {
 }
 
 /**
+ * Function to get determine if a user should be redirected from the homepage or not.
+ *
+ * @param int|null $level_id The level ID for the user.
+ *
+ * @return bool true if yes, false if no.
+ */
+function pmpromh_allow_homepage_redirect( $level_id = null ) {
+	if ( empty( $level_id ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
+		global $current_user;
+		$level = pmpro_getMembershipLevelForUser( $current_user->ID );
+		if ( ! empty( $level ) ) {
+			$level_id = $level->id;
+		}
+	}
+
+	// look up by level.
+	if ( ! empty( $level_id ) ) {
+		$homepage_redirect = filter_var( get_option( 'pmpro_member_homepage_redirect_' . $level_id, true ), FILTER_VALIDATE_BOOLEAN );
+	} else {
+		$homepage_redirect = true;
+	}
+
+	return $homepage_redirect;
+}
+
+/**
  * Membership Settings.
  */
 function pmpromh_pmpro_membership_level_after_other_settings() {
 	?>
+	<h3><?php esc_html_e( 'Membership Homepage', 'pmpromh' ); ?></h3>
 	<table>
 		<tbody class="form-table">
 			<tr>
+				<th scope="row" valign="top"><label for="member_homepage"><?php esc_html_e( 'Choose a Member Homepage', 'pmpromh' ); ?>:</label></th>
 				<td>
-					<tr>
-						<th scope="row" valign="top"><label for="member_homepage"><?php esc_html_e( 'Member Homepage', 'pmpromh' ); ?>:</label></th>
-						<td>
-							<?php
-								$level_id           = intval( $_REQUEST['edit'] );
-								$member_homepage_id = pmpromh_getHomepageForLevel( $level_id );
-							?>
-							<?php
-							wp_dropdown_pages(
-								array(
-									'name'             => 'member_homepage_id',
-									'show_option_none' => '-- ' . esc_html__( 'Choose One', 'pmpro' ) . ' --',
-									'selected'         => absint( $member_homepage_id ),
-								)
-							);
-							?>
-						</td>
-					</tr>
+					<?php
+						$level_id           = absint( filter_input( INPUT_GET, 'edit', FILTER_DEFAULT ) );
+						$member_homepage_id = pmpromh_getHomepageForLevel( $level_id );
+					?>
+					<?php
+					wp_dropdown_pages(
+						array(
+							'name'             => 'member_homepage_id',
+							'show_option_none' => '-- ' . esc_html__( 'Choose One', 'pmpro' ) . ' --',
+							'selected'         => absint( $member_homepage_id ),
+						)
+					);
+					?>
 				</td>
-			</tr> 
+			</tr>
+			<tr>
+				<th scope="row" valign="top"><?php esc_html_e( 'Homepage Redirect', 'pmpromh' ); ?>:</th>
+				<td>
+					<?php
+						$checked = filter_var( get_option( 'pmpro_member_homepage_redirect_' . $level_id, true ), FILTER_VALIDATE_BOOLEAN );
+					?>
+					<input type="hidden" value="0" name="member_homepage_redirect" />
+					<input type="checkbox" value="1" id="member_homepage_redirect" name="member_homepage_redirect" <?php checked( true, $checked, true ); ?> /> <label for="member_homepage_redirect"><?php esc_html_e( 'Enable homepage redirection to the membership homepage.', 'pmpromh' ); ?></label>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	<?php
@@ -122,6 +155,9 @@ add_action( 'pmpro_membership_level_after_other_settings', 'pmpromh_pmpro_member
 function pmpromh_pmpro_save_membership_level( $level_id ) {
 	if ( isset( $_REQUEST['member_homepage_id'] ) ) {
 		update_option( 'pmpro_member_homepage_' . absint( $level_id ), absint( $_REQUEST['member_homepage_id'] ) );
+	}
+	if ( isset( $_REQUEST['member_homepage_redirect'] ) ) {
+		update_option( 'pmpro_member_homepage_redirect_' . absint( $level_id ), absint( $_REQUEST['member_homepage_redirect'] ) );
 	}
 }
 add_action( 'pmpro_save_membership_level', 'pmpromh_pmpro_save_membership_level' );
