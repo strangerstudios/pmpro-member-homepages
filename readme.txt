@@ -2,8 +2,8 @@
 Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, homepages, redirect, landing page, members
 Requires at least: 3.5
-Tested up to: 4.5.2
-Stable tag: .1
+Tested up to: 5.4.0
+Stable tag: .2
 
 Redirect members to a unique homepage/landing page based on their level.
 
@@ -28,5 +28,9 @@ Please post it in the issues section of GitHub and we'll fix it as soon as we ca
 Please visit our premium support site at http://www.paidmembershipspro.com for more documentation and our support forums.
 
 == Changelog ==
+
+= .2 =
+* Adding option to exclude the homepage per membership level.
+
 = .1 =
 * Initial commit.
