@@ -144,9 +144,9 @@ function pmpromh_pmpro_save_membership_level($level_id)
 {
 	if(isset($_REQUEST['member_homepage_id']))
 		update_option('pmpro_member_homepage_' . $level_id, $_REQUEST['member_homepage_id']);
-	if ( isset( $_REQUEST['member_homepage_redirect'] ) ) { 
-		update_option( 'pmpro_member_homepage_redirect_' . absint( $level_id ), absint( $_REQUEST['member_homepage_redirect'] ) ); 
-	} 
+	if ( isset( $_REQUEST['member_homepage_redirect'] ) ) {
+		update_option( 'pmpro_member_homepage_redirect_' . absint( $level_id ), absint( $_REQUEST['member_homepage_redirect'] ) );
+	}
 }
 add_action("pmpro_save_membership_level", "pmpromh_pmpro_save_membership_level");
 
