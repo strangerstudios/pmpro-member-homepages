@@ -20,8 +20,9 @@ function pmpromh_login_redirect($redirect_to, $request, $user)
 		$level = pmpro_getMembershipLevelForUser($user->ID);
 		$member_homepage_id = pmpromh_getHomepageForLevel($level->id);
 		
-		if(!empty($member_homepage_id)) {
-			$redirect_to = get_permalink($member_homepage_id);
+		if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && pmpromh_allow_homepage_redirect() ) { 
+			wp_safe_redirect( get_permalink( $member_homepage_id ) ); 
+			exit; 
 		}
 	}
 
@@ -54,24 +55,24 @@ add_action('template_redirect', 'pmpromh_template_redirect_homepage');
  *
  * @return bool true if yes, false if no.
  */
-function pmpromh_allow_homepage_redirect( $level_id = null ) { 
-	if ( empty( $level_id ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) { 
-		global $current_user; 
-		$level = pmpro_getMembershipLevelForUser( $current_user->ID ); 
-		if ( ! empty( $level ) ) { 
-			$level_id = $level->id; 
-		} 
-	} 
- 
-	// look up by level. 
-	if ( ! empty( $level_id ) ) { 
-		$homepage_redirect = filter_var( get_option( 'pmpro_member_homepage_redirect_' . $level_id, true ), FILTER_VALIDATE_BOOLEAN ); 
-	} else { 
-		$homepage_redirect = true; 
-	} 
- 
-	return $homepage_redirect; 
-} 
+function pmpromh_allow_homepage_redirect( $level_id = null ) {
+	if ( empty( $level_id ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
+		global $current_user;
+		$level = pmpro_getMembershipLevelForUser( $current_user->ID );
+		if ( ! empty( $level ) ) {
+			$level_id = $level->id;
+		}
+	}
+
+	// look up by level.
+	if ( ! empty( $level_id ) ) {
+		$homepage_redirect = filter_var( get_option( 'pmpro_member_homepage_redirect_' . $level_id, true ), FILTER_VALIDATE_BOOLEAN );
+	} else {
+		$homepage_redirect = true;
+	}
+
+	return $homepage_redirect;
+}
 
 /*
 	Function to get a homepage for level
