@@ -6,9 +6,20 @@ Description: Redirect members to a unique homepage/landing page based on their l
 Version: .2
 Author: Stranger Studios
 Author URI: http://www.strangerstudios.com
+Text Domain: pmpro-member-homepages
+Domain Path: /languages
 */
 
 define( 'PMPRO_MEMBER_HOMEPAGES_VERSION', '.2' ); 
+
+/**
+ * Load text domain
+ * pmpromh_load_plugin_text_domain
+ */
+function pmpromh_load_plugin_text_domain() {
+	load_plugin_textdomain( 'pmpro-member-homepages', false, basename( dirname( __FILE__ ) ) . '/languages' ); 
+}
+add_action( 'init', 'pmpromh_load_plugin_text_domain' ); 
 
 /*
 	Function to redirect member on login to their membership level's homepage
@@ -18,11 +29,13 @@ function pmpromh_login_redirect($redirect_to, $request, $user)
 	//check level
 	if(!empty($user) && !empty($user->ID) && function_exists('pmpro_getMembershipLevelForUser')) {
 		$level = pmpro_getMembershipLevelForUser($user->ID);
-		$member_homepage_id = pmpromh_getHomepageForLevel($level->id);
+	
+		if( !empty( $level ) && isset( $level->id ) ) {
+			$member_homepage_id = pmpromh_getHomepageForLevel( $level->id );
 		
-		if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && pmpromh_allow_homepage_redirect() ) { 
-			wp_safe_redirect( get_permalink( $member_homepage_id ) ); 
-			exit; 
+			if( !empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && pmpromh_allow_homepage_redirect() ) {
+				$redirect_to = get_permalink( $member_homepage_id );
+			}
 		}
 	}
 
@@ -104,7 +117,7 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 	<table>
 		<tbody class="form-table">
 			<tr>
-				<th scope="row" valign="top"><label for="member_homepage"><?php esc_html_e( 'Choose a Member Homepage', 'pmpromh' ); ?>:</label></th>
+				<th scope="row" valign="top"><label for="member_homepage"><?php esc_html_e( 'Choose a Member Homepage', 'pmpro-member-homepages' ); ?>:</label></th>
 				<td>
 					<?php
 						$level_id           = absint( filter_input( INPUT_GET, 'edit', FILTER_DEFAULT ) );
@@ -114,7 +127,7 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 					wp_dropdown_pages(
 						array(
 							'name'             => 'member_homepage_id',
-							'show_option_none' => '-- ' . esc_html__( 'Choose One', 'pmpro' ) . ' --',
+							'show_option_none' => '-- ' . esc_html__( 'Choose One', 'pmpro-member-homepages' ) . ' --',
 							'selected'         => absint( $member_homepage_id ),
 						)
 					);
@@ -157,8 +170,8 @@ function pmpromh_plugin_row_meta($links, $file) {
 	if(strpos($file, 'pmpro-member-homepages.php') !== false)
 	{
 		$new_links = array(
-			'<a href="' . esc_url('http://www.paidmembershipspro.com/add-ons/plus-add-ons/member-homepages/')  . '" title="' . esc_attr( __( 'View Documentation', 'pmpro' ) ) . '">' . __( 'Docs', 'pmpro' ) . '</a>',
-			'<a href="' . esc_url('http://paidmembershipspro.com/support/') . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmpro' ) ) . '">' . __( 'Support', 'pmpro' ) . '</a>',
+			'<a href="' . esc_url('http://www.paidmembershipspro.com/add-ons/plus-add-ons/member-homepages/')  . '" title="' . esc_attr( __( 'View Documentation', 'pmpro-member-homepages' ) ) . '">' . __( 'Docs', 'pmpro-member-homepages' ) . '</a>',
+			'<a href="' . esc_url('http://paidmembershipspro.com/support/') . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmpro-member-homepages' ) ) . '">' . __( 'Support', 'pmpro-member-homepages' ) . '</a>',
 		);
 		$links = array_merge($links, $new_links);
 	}
