@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Paid Memberships Pro - Member Homepages Add On
-Plugin URI: http://www.paidmembershipspro.com/pmpro-member-homepages/
+Plugin URI: https://www.paidmembershipspro.com/add-ons/member-homepages/
 Description: Redirect members to a unique homepage/landing page based on their level.
 Version: .2
 Author: Paid Memberships Pro

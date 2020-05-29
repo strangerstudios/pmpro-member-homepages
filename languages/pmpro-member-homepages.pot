@@ -1,29 +1,14 @@
-# Copyright (C) 2019 Stranger Studios
-# This file is distributed under the same license as the Paid Memberships Pro - Member Homepages Add On plugin.
-msgid ""
-msgstr ""
-"Project-Id-Version: Paid Memberships Pro - Member Homepages Add On .1\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pmpro-member-homepages\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-06-26T13:57:04+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.2.0\n"
-"X-Domain: pmpro-member-homepages\n"
-
 #. Plugin Name of the plugin
 msgid "Paid Memberships Pro - Member Homepages Add On"
 msgstr ""
 
 #. Plugin URI of the plugin
-msgid "http://www.paidmembershipspro.com/pmpro-member-homepages/"
+msgid "https://www.paidmembershipspro.com/add-ons/member-homepages/"
 msgstr ""
 
 #. Description of the plugin
-msgid "Redirect members to a unique homepage/landing page based on their level."
+msgid ""
+"Redirect members to a unique homepage/landing page based on their level."
 msgstr ""
 
 #. Author of the plugin
@@ -34,26 +19,57 @@ msgstr ""
 msgid "http://www.strangerstudios.com"
 msgstr ""
 
+# Copyright (C) 2020 Stranger Studios, LLC
+# This file is distributed under the same license as the Paid Memberships Pro - Member Homepages Add On plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Paid Memberships Pro - Member Homepages Add On .2\n"
+"Report-Msgid-Bugs-To: info@paidmembershipspro.com\n"
+"POT-Creation-Date: 2020-05-29 13:35-0400\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: pmpro-member-homepages.php:118 pmpro-member-homepages.php:118
+msgid ""
+"Use these settings to redirect members to a specific page on login or any "
+"time they visit your site's homepage/frontpage."
+msgstr ""
+
+#: pmpro-member-homepages.php:137 pmpro-member-homepages.php:137
+msgid ""
+"Unless another \"redirect_to\" value is set, members of this level will be "
+"redirected to this page on login."
+msgstr ""
+
+#: pmpro-member-homepages.php:175 pmpro-member-homepages.php:127
+#: pmpro-member-homepages.php:175
+msgid "Docs"
+msgstr ""
+
+#: pmpro-member-homepages.php:175 pmpro-member-homepages.php:127
+#: pmpro-member-homepages.php:175
+msgid "View Documentation"
+msgstr ""
+
+#: pmpro-member-homepages.php:176 pmpro-member-homepages.php:128
+#: pmpro-member-homepages.php:176
+msgid "Support"
+msgstr ""
+
+#: pmpro-member-homepages.php:176 pmpro-member-homepages.php:128
+#: pmpro-member-homepages.php:176
+msgid "Visit Customer Support Forum"
+msgstr ""
+
 #: pmpro-member-homepages.php:91
 msgid "Member Homepage"
 msgstr ""
 
 #: pmpro-member-homepages.php:98
 msgid "Choose One"
-msgstr ""
-
-#: pmpro-member-homepages.php:127
-msgid "View Documentation"
-msgstr ""
-
-#: pmpro-member-homepages.php:127
-msgid "Docs"
-msgstr ""
-
-#: pmpro-member-homepages.php:128
-msgid "Visit Customer Support Forum"
-msgstr ""
-
-#: pmpro-member-homepages.php:128
-msgid "Support"
 msgstr ""
