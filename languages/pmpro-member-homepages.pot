@@ -1,0 +1,59 @@
+# Copyright (C) 2019 Stranger Studios
+# This file is distributed under the same license as the Paid Memberships Pro - Member Homepages Add On plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Paid Memberships Pro - Member Homepages Add On .1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/pmpro-member-homepages\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-06-26T13:57:04+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.2.0\n"
+"X-Domain: pmpro-member-homepages\n"
+
+#. Plugin Name of the plugin
+msgid "Paid Memberships Pro - Member Homepages Add On"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "http://www.paidmembershipspro.com/pmpro-member-homepages/"
+msgstr ""
+
+#. Description of the plugin
+msgid "Redirect members to a unique homepage/landing page based on their level."
+msgstr ""
+
+#. Author of the plugin
+msgid "Stranger Studios"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://www.strangerstudios.com"
+msgstr ""
+
+#: pmpro-member-homepages.php:91
+msgid "Member Homepage"
+msgstr ""
+
+#: pmpro-member-homepages.php:98
+msgid "Choose One"
+msgstr ""
+
+#: pmpro-member-homepages.php:127
+msgid "View Documentation"
+msgstr ""
+
+#: pmpro-member-homepages.php:127
+msgid "Docs"
+msgstr ""
+
+#: pmpro-member-homepages.php:128
+msgid "Visit Customer Support Forum"
+msgstr ""
+
+#: pmpro-member-homepages.php:128
+msgid "Support"
+msgstr ""
