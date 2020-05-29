@@ -29,10 +29,10 @@ function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 	if(!empty( $user ) && !empty( $user->ID ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
 		$level = pmpro_getMembershipLevelForUser( $user->ID );
 	
-		if( !empty( $level ) && isset( $level->id ) ) {
+		if( !empty( $level ) && isset( $level->id ) && pmpromh_allow_homepage_redirect( $level->id ) ) {
 			$member_homepage_id = pmpromh_getHomepageForLevel( $level->id );
 		
-			if( !empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && pmpromh_allow_homepage_redirect() ) {
+			if( ! empty( $member_homepage_id ) && is_page( $member_homepage_id ) ) {
 				$redirect_to = get_permalink( $member_homepage_id );
 			}
 		}
