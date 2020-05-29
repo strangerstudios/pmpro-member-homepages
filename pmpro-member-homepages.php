@@ -31,13 +31,13 @@ function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 	
 		if( !empty( $level ) && isset( $level->id ) ) {
 			$member_homepage_id = pmpromh_getHomepageForLevel( $level->id );
-		
-			if( ! empty( $member_homepage_id ) && is_page( $member_homepage_id ) ) {
+
+			if( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) ) {
 				$redirect_to = get_permalink( $member_homepage_id );
 			}
 		}
 	}
-
+	
 	return $redirect_to;
 }
 add_filter('login_redirect', 'pmpromh_login_redirect', 10, 3);
