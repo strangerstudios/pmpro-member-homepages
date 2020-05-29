@@ -4,8 +4,8 @@ Plugin Name: Paid Memberships Pro - Member Homepages Add On
 Plugin URI: http://www.paidmembershipspro.com/pmpro-member-homepages/
 Description: Redirect members to a unique homepage/landing page based on their level.
 Version: .2
-Author: Stranger Studios
-Author URI: http://www.strangerstudios.com
+Author: Paid Memberships Pro
+Author URI: https://www.paidmembershipspro.com
 Text Domain: pmpro-member-homepages
 Domain Path: /languages
 */
@@ -24,11 +24,10 @@ add_action( 'init', 'pmpromh_load_plugin_text_domain' );
 /*
 	Function to redirect member on login to their membership level's homepage
 */
-function pmpromh_login_redirect($redirect_to, $request, $user)
-{
+function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 	//check level
-	if(!empty($user) && !empty($user->ID) && function_exists('pmpro_getMembershipLevelForUser')) {
-		$level = pmpro_getMembershipLevelForUser($user->ID);
+	if(!empty( $user ) && !empty( $user->ID ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
+		$level = pmpro_getMembershipLevelForUser( $user->ID );
 	
 		if( !empty( $level ) && isset( $level->id ) ) {
 			$member_homepage_id = pmpromh_getHomepageForLevel( $level->id );
@@ -51,18 +50,18 @@ add_filter('login_redirect', 'pmpromh_login_redirect', 10, 3);
 function pmpromh_template_redirect_homepage() {
 	global $current_user;
 	//is there a user to check?
-	if(!empty($current_user->ID) && is_front_page()) {
+	if( !empty($current_user->ID) && is_front_page() ) {
 		$member_homepage_id = pmpromh_getHomepageForLevel();
-		if(!empty($member_homepage_id) && !is_page($member_homepage_id)) {
-			wp_redirect(get_permalink($member_homepage_id));
+		if(!empty($member_homepage_id) && !is_page( $member_homepage_id ) ) {
+			wp_redirect( get_permalink( $member_homepage_id ) );
 			exit;
 		}
 	}
 }
-add_action('template_redirect', 'pmpromh_template_redirect_homepage');
+add_action( 'template_redirect', 'pmpromh_template_redirect_homepage' );
 
 /**
- * Function to get determine if a user should be redirected from the homepage or not.
+ * Function to determine if a user should be redirected from the homepage or not.
  *
  * @param int|null $level_id The level ID for the user.
  *
@@ -90,17 +89,18 @@ function pmpromh_allow_homepage_redirect( $level_id = null ) {
 /*
 	Function to get a homepage for level
 */
-function pmpromh_getHomepageForLevel($level_id = NULL) {
-	if(empty($level_id) && function_exists('pmpro_getMembershipLevelForUser')) {
+function pmpromh_getHomepageForLevel( $level_id = NULL ) {
+	if(empty($level_id) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
 		global $current_user;
-		$level = pmpro_getMembershipLevelForUser($current_user->ID);
-		if(!empty($level))
+		$level = pmpro_getMembershipLevelForUser( $current_user->ID );
+		if( !empty( $level ) ) {
 			$level_id = $level->id;
+		}
 	}
 	
 	//look up by level
-	if(!empty($level_id)) {
-		$member_homepage_id = get_option('pmpro_member_homepage_' . $level_id);
+	if( !empty( $level_id ) ) {
+		$member_homepage_id = get_option( 'pmpro_member_homepage_' . $level_id );
 	} else {
 		$member_homepage_id = false;
 	}
@@ -113,7 +113,7 @@ function pmpromh_getHomepageForLevel($level_id = NULL) {
  */
 function pmpromh_pmpro_membership_level_after_other_settings() {
 	?>
-	<h3><?php esc_html_e( 'Membership Homepage', 'pmpromh' ); ?></h3>
+	<h3><?php esc_html_e( 'Membership Homepage', 'pmpro-member-homepages' ); ?></h3>
 	<table>
 		<tbody class="form-table">
 			<tr>
@@ -135,13 +135,13 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 				</td>
 			</tr>
 			<tr>
-				<th scope="row" valign="top"><?php esc_html_e( 'Homepage Redirect', 'pmpromh' ); ?>:</th>
+				<th scope="row" valign="top"><?php esc_html_e( 'Homepage Redirect', 'pmpro-member-homepages' ); ?>:</th>
 				<td>
 					<?php
 						$checked = filter_var( get_option( 'pmpro_member_homepage_redirect_' . $level_id, true ), FILTER_VALIDATE_BOOLEAN );
 					?>
 					<input type="hidden" value="0" name="member_homepage_redirect" />
-					<input type="checkbox" value="1" id="member_homepage_redirect" name="member_homepage_redirect" <?php checked( true, $checked, true ); ?> /> <label for="member_homepage_redirect"><?php esc_html_e( 'Enable homepage redirection to the membership homepage.', 'pmpromh' ); ?></label>
+					<input type="checkbox" value="1" id="member_homepage_redirect" name="member_homepage_redirect" <?php checked( true, $checked, true ); ?> /> <label for="member_homepage_redirect"><?php esc_html_e( 'Enable homepage redirection to the membership homepage.', 'pmpro-member-homepages' ); ?></label>
 				</td>
 			</tr>
 		</tbody>
@@ -167,11 +167,10 @@ add_action("pmpro_save_membership_level", "pmpromh_pmpro_save_membership_level")
 	Function to add links to the plugin row meta
 */
 function pmpromh_plugin_row_meta($links, $file) {
-	if(strpos($file, 'pmpro-member-homepages.php') !== false)
-	{
+	if( strpos($file, 'pmpro-member-homepages.php') !== false ) {
 		$new_links = array(
-			'<a href="' . esc_url('http://www.paidmembershipspro.com/add-ons/plus-add-ons/member-homepages/')  . '" title="' . esc_attr( __( 'View Documentation', 'pmpro-member-homepages' ) ) . '">' . __( 'Docs', 'pmpro-member-homepages' ) . '</a>',
-			'<a href="' . esc_url('http://paidmembershipspro.com/support/') . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmpro-member-homepages' ) ) . '">' . __( 'Support', 'pmpro-member-homepages' ) . '</a>',
+			'<a href="' . esc_url('https://www.paidmembershipspro.com/add-ons/plus-add-ons/member-homepages/')  . '" title="' . esc_attr( __( 'View Documentation', 'pmpro-member-homepages' ) ) . '">' . __( 'Docs', 'pmpro-member-homepages' ) . '</a>',
+			'<a href="' . esc_url('https://www.paidmembershipspro.com/support/') . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmpro-member-homepages' ) ) . '">' . __( 'Support', 'pmpro-member-homepages' ) . '</a>',
 		);
 		$links = array_merge($links, $new_links);
 	}
