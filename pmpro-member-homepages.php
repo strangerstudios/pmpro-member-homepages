@@ -113,11 +113,13 @@ function pmpromh_getHomepageForLevel( $level_id = NULL ) {
  */
 function pmpromh_pmpro_membership_level_after_other_settings() {
 	?>
+	<hr />
 	<h3><?php esc_html_e( 'Membership Homepage', 'pmpro-member-homepages' ); ?></h3>
+	<p><?php _e( "Use these settings to redirect members to a specific page on login or any time they visit your site's homepage/frontpage.", 'pmpro-member-homepages' );?></p>
 	<table>
 		<tbody class="form-table">
 			<tr>
-				<th scope="row" valign="top"><label for="member_homepage"><?php esc_html_e( 'Choose a Member Homepage', 'pmpro-member-homepages' ); ?>:</label></th>
+				<th scope="row" valign="top"><label for="member_homepage"><?php esc_html_e( 'Member Homepage', 'pmpro-member-homepages' ); ?>:</label></th>
 				<td>
 					<?php
 						$level_id           = absint( filter_input( INPUT_GET, 'edit', FILTER_DEFAULT ) );
@@ -132,6 +134,7 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 						)
 					);
 					?>
+					<p class="description"><?php _e( 'Unless another "redirect_to" value is set, members of this level will be redirected to this page on login.', 'pmpro-member-homepages' );?></p>
 				</td>
 			</tr>
 			<tr>
@@ -141,7 +144,7 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 						$checked = filter_var( get_option( 'pmpro_member_homepage_redirect_' . $level_id, true ), FILTER_VALIDATE_BOOLEAN );
 					?>
 					<input type="hidden" value="0" name="member_homepage_redirect" />
-					<input type="checkbox" value="1" id="member_homepage_redirect" name="member_homepage_redirect" <?php checked( true, $checked, true ); ?> /> <label for="member_homepage_redirect"><?php esc_html_e( 'Enable homepage redirection to the membership homepage.', 'pmpro-member-homepages' ); ?></label>
+					<input type="checkbox" value="1" id="member_homepage_redirect" name="member_homepage_redirect" <?php checked( true, $checked, true ); ?> /> <label for="member_homepage_redirect"><?php esc_html_e( "Check to have members always redirected away from your site's homepage/frontpage.", 'pmpro-member-homepages' ); ?></label>
 				</td>
 			</tr>
 		</tbody>
