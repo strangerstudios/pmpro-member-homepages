@@ -29,7 +29,7 @@ function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 	if(!empty( $user ) && !empty( $user->ID ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
 		$level = pmpro_getMembershipLevelForUser( $user->ID );
 	
-		if( !empty( $level ) && isset( $level->id ) && pmpromh_allow_homepage_redirect( $level->id ) ) {
+		if( !empty( $level ) && isset( $level->id ) ) {
 			$member_homepage_id = pmpromh_getHomepageForLevel( $level->id );
 		
 			if( ! empty( $member_homepage_id ) && is_page( $member_homepage_id ) ) {
@@ -50,7 +50,7 @@ add_filter('login_redirect', 'pmpromh_login_redirect', 10, 3);
 function pmpromh_template_redirect_homepage() {
 	global $current_user;
 	//is there a user to check?
-	if( !empty($current_user->ID) && is_front_page() ) {
+	if( !empty($current_user->ID) && is_front_page() && pmpromh_allow_homepage_redirect() ) {
 		$member_homepage_id = pmpromh_getHomepageForLevel();
 		if(!empty($member_homepage_id) && !is_page( $member_homepage_id ) ) {
 			wp_redirect( get_permalink( $member_homepage_id ) );
