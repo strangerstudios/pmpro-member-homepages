@@ -2,15 +2,15 @@
 /*
 Plugin Name: Paid Memberships Pro - Member Homepages Add On
 Plugin URI: https://www.paidmembershipspro.com/add-ons/member-homepages/
-Description: Redirect members to a unique homepage/landing page based on their level.
-Version: .2
+Description: Redirect members to a unique homepage or landing page based on their level.
+Version: 0.2
 Author: Paid Memberships Pro
 Author URI: https://www.paidmembershipspro.com
 Text Domain: pmpro-member-homepages
 Domain Path: /languages
 */
 
-define( 'PMPRO_MEMBER_HOMEPAGES_VERSION', '.2' ); 
+define( 'PMPRO_MEMBER_HOMEPAGES_VERSION', '0.2' ); 
 
 /**
  * Load text domain
@@ -172,7 +172,7 @@ add_action("pmpro_save_membership_level", "pmpromh_pmpro_save_membership_level")
 function pmpromh_plugin_row_meta($links, $file) {
 	if( strpos($file, 'pmpro-member-homepages.php') !== false ) {
 		$new_links = array(
-			'<a href="' . esc_url('https://www.paidmembershipspro.com/add-ons/plus-add-ons/member-homepages/')  . '" title="' . esc_attr( __( 'View Documentation', 'pmpro-member-homepages' ) ) . '">' . __( 'Docs', 'pmpro-member-homepages' ) . '</a>',
+			'<a href="' . esc_url('https://www.paidmembershipspro.com/add-ons/member-homepages/')  . '" title="' . esc_attr( __( 'View Documentation', 'pmpro-member-homepages' ) ) . '">' . __( 'Docs', 'pmpro-member-homepages' ) . '</a>',
 			'<a href="' . esc_url('https://www.paidmembershipspro.com/support/') . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmpro-member-homepages' ) ) . '">' . __( 'Support', 'pmpro-member-homepages' ) . '</a>',
 		);
 		$links = array_merge($links, $new_links);
