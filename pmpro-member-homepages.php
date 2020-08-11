@@ -111,6 +111,17 @@ function pmpromh_getHomepageForLevel( $level_id = NULL ) {
 		$member_homepage_id = false;
 	}
 
+	/**
+	 * Filter to allow the Member Homepage ID to be set to any post ID, including a Custom Post Type.
+	 *
+	 * @param $member_homepage_id int The level's asssigned homepage ID. False is not set for this level.
+	 * @param $level_id int The ID of the current user's membership level.
+	 *
+	 * @return $member_homepage_id int The member homepage ID.
+	 *
+	 */
+	$member_homepage_id = apply_filters( 'pmpro_member_homepage_id', $member_homepage_id, $level_id );
+
 	return $member_homepage_id;
 }
 
