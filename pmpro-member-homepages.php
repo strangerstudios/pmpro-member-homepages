@@ -25,6 +25,12 @@ add_action( 'init', 'pmpromh_load_plugin_text_domain' );
 	Function to redirect member on login to their membership level's homepage
 */
 function pmpromh_login_redirect( $redirect_to, $request, $user ) {
+
+	// If already redirecting, respect that URL.
+	if ( ! empty( $redirect_to ) ) {
+		return $redirect_to;
+	}
+
 	//check level
 	if(!empty( $user ) && !empty( $user->ID ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
 		$level = pmpro_getMembershipLevelForUser( $user->ID );
@@ -40,7 +46,7 @@ function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 	
 	return $redirect_to;
 }
-add_filter('login_redirect', 'pmpromh_login_redirect', 10, 3);
+add_filter('login_redirect', 'pmpromh_login_redirect', 9, 3);
 
 /*
 	Function to redirect member to their membership level's homepage when 
