@@ -58,7 +58,7 @@ function pmpromh_template_redirect_homepage() {
 	//is there a user to check?
 	if( !empty($current_user->ID) && is_front_page() && pmpromh_allow_homepage_redirect() ) {
 		$member_homepage_id = pmpromh_getHomepageForLevel();
-		if(!empty($member_homepage_id) && !is_page( $member_homepage_id ) ) {
+		if(!empty($member_homepage_id) && !is_page( $member_homepage_id ) && ! empty( get_post( $member_homepage_id ) ) ) {
 			wp_redirect( get_permalink( $member_homepage_id ) );
 			exit;
 		}
