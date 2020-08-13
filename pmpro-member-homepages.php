@@ -2,15 +2,15 @@
 /*
 Plugin Name: Paid Memberships Pro - Member Homepages Add On
 Plugin URI: https://www.paidmembershipspro.com/add-ons/member-homepages/
-Description: Redirect members to a unique homepage/landing page based on their level.
-Version: .2
+Description: Redirect members to a unique homepage or landing page based on their level.
+Version: 0.2
 Author: Paid Memberships Pro
 Author URI: https://www.paidmembershipspro.com
 Text Domain: pmpro-member-homepages
 Domain Path: /languages
 */
 
-define( 'PMPRO_MEMBER_HOMEPAGES_VERSION', '.2' ); 
+define( 'PMPRO_MEMBER_HOMEPAGES_VERSION', '0.2' ); 
 
 /**
  * Load text domain
@@ -25,6 +25,12 @@ add_action( 'init', 'pmpromh_load_plugin_text_domain' );
 	Function to redirect member on login to their membership level's homepage
 */
 function pmpromh_login_redirect( $redirect_to, $request, $user ) {
+
+	// If already redirecting, respect that URL.
+	if ( ! empty( $redirect_to ) ) {
+		return $redirect_to;
+	}
+
 	//check level
 	if(!empty( $user ) && !empty( $user->ID ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
 		$level = pmpro_getMembershipLevelForUser( $user->ID );
@@ -40,7 +46,7 @@ function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 	
 	return $redirect_to;
 }
-add_filter('login_redirect', 'pmpromh_login_redirect', 10, 3);
+add_filter('login_redirect', 'pmpromh_login_redirect', 9, 3);
 
 /*
 	Function to redirect member to their membership level's homepage when 
@@ -52,7 +58,7 @@ function pmpromh_template_redirect_homepage() {
 	//is there a user to check?
 	if( !empty($current_user->ID) && is_front_page() && pmpromh_allow_homepage_redirect() ) {
 		$member_homepage_id = pmpromh_getHomepageForLevel();
-		if(!empty($member_homepage_id) && !is_page( $member_homepage_id ) ) {
+		if(!empty($member_homepage_id) && !is_page( $member_homepage_id ) && ! empty( get_post( $member_homepage_id ) ) ) {
 			wp_redirect( get_permalink( $member_homepage_id ) );
 			exit;
 		}
@@ -104,6 +110,17 @@ function pmpromh_getHomepageForLevel( $level_id = NULL ) {
 	} else {
 		$member_homepage_id = false;
 	}
+
+	/**
+	 * Filter to allow the Member Homepage ID to be set to any post ID, including a Custom Post Type.
+	 *
+	 * @param $member_homepage_id int The level's asssigned homepage ID. False is not set for this level.
+	 * @param $level_id int The ID of the current user's membership level.
+	 *
+	 * @return $member_homepage_id int The member homepage ID.
+	 *
+	 */
+	$member_homepage_id = apply_filters( 'pmpro_member_homepage_id', $member_homepage_id, $level_id );
 
 	return $member_homepage_id;
 }
@@ -172,7 +189,7 @@ add_action("pmpro_save_membership_level", "pmpromh_pmpro_save_membership_level")
 function pmpromh_plugin_row_meta($links, $file) {
 	if( strpos($file, 'pmpro-member-homepages.php') !== false ) {
 		$new_links = array(
-			'<a href="' . esc_url('https://www.paidmembershipspro.com/add-ons/plus-add-ons/member-homepages/')  . '" title="' . esc_attr( __( 'View Documentation', 'pmpro-member-homepages' ) ) . '">' . __( 'Docs', 'pmpro-member-homepages' ) . '</a>',
+			'<a href="' . esc_url('https://www.paidmembershipspro.com/add-ons/member-homepages/')  . '" title="' . esc_attr( __( 'View Documentation', 'pmpro-member-homepages' ) ) . '">' . __( 'Docs', 'pmpro-member-homepages' ) . '</a>',
 			'<a href="' . esc_url('https://www.paidmembershipspro.com/support/') . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmpro-member-homepages' ) ) . '">' . __( 'Support', 'pmpro-member-homepages' ) . '</a>',
 		);
 		$links = array_merge($links, $new_links);
