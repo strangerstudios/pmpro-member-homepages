@@ -29,9 +29,11 @@ Please post it in the issues section of GitHub and we'll fix it as soon as we ca
 Please visit our premium support site at https://www.paidmembershipspro.com for more documentation and our support forums.
 
 == Changelog ==
-= 0.2 - 2020-08-10 =
-* FEATURE: Added setting to redirect away from homepage or not.
+
+= 0.2 - 2020-08-13 =
+* FEATURE: Added a setting to redirect away from homepage or not.
 * BUG FIX: Fixed some warnings.
+* ENHANCEMENT: Added filter `pmpro_member_homepage_id` to set to any post ID, including a CPT.
 * ENHANCEMENT: Prepared for localization.
 
 = .1 =
