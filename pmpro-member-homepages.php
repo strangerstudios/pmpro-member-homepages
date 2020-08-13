@@ -58,7 +58,7 @@ function pmpromh_template_redirect_homepage() {
 	//is there a user to check?
 	if( !empty($current_user->ID) && is_front_page() && pmpromh_allow_homepage_redirect() ) {
 		$member_homepage_id = pmpromh_getHomepageForLevel();
-		if(!empty($member_homepage_id) && !is_page( $member_homepage_id ) ) {
+		if(!empty($member_homepage_id) && !is_page( $member_homepage_id ) && ! empty( get_post( $member_homepage_id ) ) ) {
 			wp_redirect( get_permalink( $member_homepage_id ) );
 			exit;
 		}
@@ -110,6 +110,17 @@ function pmpromh_getHomepageForLevel( $level_id = NULL ) {
 	} else {
 		$member_homepage_id = false;
 	}
+
+	/**
+	 * Filter to allow the Member Homepage ID to be set to any post ID, including a Custom Post Type.
+	 *
+	 * @param $member_homepage_id int The level's asssigned homepage ID. False is not set for this level.
+	 * @param $level_id int The ID of the current user's membership level.
+	 *
+	 * @return $member_homepage_id int The member homepage ID.
+	 *
+	 */
+	$member_homepage_id = apply_filters( 'pmpro_member_homepage_id', $member_homepage_id, $level_id );
 
 	return $member_homepage_id;
 }
