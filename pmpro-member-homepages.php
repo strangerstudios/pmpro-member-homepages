@@ -26,19 +26,19 @@ add_action( 'init', 'pmpromh_load_plugin_text_domain' );
 */
 function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 
-	// If already redirecting, respect that URL.
-	if ( ! empty( $redirect_to ) ) {
-		return $redirect_to;
+	// Set the redirection if a redirect_to is passed in the URL.
+	if ( ! empty( $_REQUEST['redirect_to'] ) ) {
+		$redirect_to = $_REQUEST['redirect_to'];
 	}
 
 	//check level
-	if(!empty( $user ) && !empty( $user->ID ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
+	if ( ! empty( $user ) && ! empty( $user->ID ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
 		$level = pmpro_getMembershipLevelForUser( $user->ID );
 	
-		if( !empty( $level ) && isset( $level->id ) ) {
+		if ( ! empty( $level ) && isset( $level->id ) ) {
 			$member_homepage_id = pmpromh_getHomepageForLevel( $level->id );
 
-			if( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) ) {
+			if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) ) {
 				$redirect_to = get_permalink( $member_homepage_id );
 			}
 		}
