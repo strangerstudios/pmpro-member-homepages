@@ -3,7 +3,7 @@ Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, homepages, redirect, landing page, members
 Requires at least: 3.5
 Tested up to: 5.5
-Stable tag: 0.2
+Stable tag: 0.3
 
 Redirect members to a unique homepage or landing page based on their level.
 
@@ -16,7 +16,7 @@ This Add On for Paid Memberships Pro allows you to assign a unique homepage or l
 = Download, Install and Activate! =
 1. Upload the `pmpro-member-homepages` directory to the `/wp-content/plugins/` directory of your site.
 1. Activate the plugin through the 'Plugins' menu in WordPress.
-1. Edit your membership levels to assign a level's homepage.
+1. Edit your membership levels to assign a level's homepage and configure settings.
 
 == Frequently Asked Questions ==
 
@@ -29,6 +29,9 @@ Please post it in the issues section of GitHub and we'll fix it as soon as we ca
 Please visit our premium support site at https://www.paidmembershipspro.com for more documentation and our support forums.
 
 == Changelog ==
+
+= 0.3 - 2020-08-19 =
+* FEATURE: Added a setting to ignore other `redirect_to` attributes and always override with the member homepage.
 
 = 0.2 - 2020-08-13 =
 * FEATURE: Added a setting to redirect away from homepage or not.

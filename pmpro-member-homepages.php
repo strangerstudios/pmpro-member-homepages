@@ -3,7 +3,7 @@
 Plugin Name: Paid Memberships Pro - Member Homepages Add On
 Plugin URI: https://www.paidmembershipspro.com/add-ons/member-homepages/
 Description: Redirect members to a unique homepage or landing page based on their level.
-Version: 0.2
+Version: 0.3
 Author: Paid Memberships Pro
 Author URI: https://www.paidmembershipspro.com
 Text Domain: pmpro-member-homepages
@@ -26,24 +26,21 @@ add_action( 'init', 'pmpromh_load_plugin_text_domain' );
 */
 function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 
-	// If already redirecting, respect that URL.
-	if ( ! empty( $redirect_to ) ) {
-		return $redirect_to;
-	}
-
-	//check level
-	if(!empty( $user ) && !empty( $user->ID ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
+	// Check level
+	if ( ! empty( $user ) && ! empty( $user->ID ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
 		$level = pmpro_getMembershipLevelForUser( $user->ID );
-	
-		if( !empty( $level ) && isset( $level->id ) ) {
-			$member_homepage_id = pmpromh_getHomepageForLevel( $level->id );
 
-			if( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) ) {
+		// Member has a level, does their level have a homepage?
+		if ( ! empty( $level ) && isset( $level->id ) ) {
+			$member_homepage_id = pmpromh_getHomepageForLevel( $level->id );
+			$ignore_redirect_to = pmpromh_ignore_redirect_to( $level->id );
+			// Member has a member homepage, override the redirect_to if level set to ignore other redirects.
+			if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && ! empty( $ignore_redirect_to ) ) {
 				$redirect_to = get_permalink( $member_homepage_id );
 			}
 		}
 	}
-	
+
 	return $redirect_to;
 }
 add_filter('login_redirect', 'pmpromh_login_redirect', 9, 3);
@@ -126,6 +123,32 @@ function pmpromh_getHomepageForLevel( $level_id = NULL ) {
 }
 
 /**
+ * Function to determine if login redirection should ignore other redirect_to vars or not.
+ *
+ * @param int|null $level_id The level ID for the user.
+ *
+ * @return bool true if yes, false if no.
+ */
+function pmpromh_ignore_redirect_to( $level_id = null ) {
+	if ( empty( $level_id ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
+		global $current_user;
+		$level = pmpro_getMembershipLevelForUser( $current_user->ID );
+		if ( ! empty( $level ) ) {
+			$level_id = $level->id;
+		}
+	}
+
+	// look up by level.
+	if ( ! empty( $level_id ) ) {
+		$ignore_redirect_to = filter_var( get_option( 'pmpro_member_homepage_ignore_redirect_to_' . $level_id, true ), FILTER_VALIDATE_BOOLEAN );
+	} else {
+		$ignore_redirect_to = true;
+	}
+
+	return $ignore_redirect_to;
+}
+
+/**
  * Membership Settings.
  */
 function pmpromh_pmpro_membership_level_after_other_settings() {
@@ -164,6 +187,16 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 					<input type="checkbox" value="1" id="member_homepage_redirect" name="member_homepage_redirect" <?php checked( true, $checked, true ); ?> /> <label for="member_homepage_redirect"><?php esc_html_e( "Check to have members always redirected away from your site's homepage/frontpage.", 'pmpro-member-homepages' ); ?></label>
 				</td>
 			</tr>
+			<tr>
+				<th scope="row" valign="top"><?php esc_html_e( 'Homepage Redirect', 'pmpro-member-homepages' ); ?>:</th>
+				<td>
+					<?php
+						$checked = filter_var( get_option( 'pmpro_member_homepage_ignore_redirect_to_' . $level_id, true ), FILTER_VALIDATE_BOOLEAN );
+					?>
+					<input type="hidden" value="0" name="member_homepage_ignore_redirect_to" />
+					<input type="checkbox" value="1" id="member_homepage_ignore_redirect_to" name="member_homepage_ignore_redirect_to" <?php checked( true, $checked, true ); ?> /> <label for="member_homepage_ignore_redirect_to"><?php esc_html_e( 'Check to ignore other "redirect_to" values on login and always redirect members to their homepage on login', 'pmpro-member-homepages' ); ?></label>
+				</td>
+			</tr>
 		</tbody>
 	</table>
 	<?php
@@ -179,6 +212,9 @@ function pmpromh_pmpro_save_membership_level($level_id)
 		update_option('pmpro_member_homepage_' . $level_id, $_REQUEST['member_homepage_id']);
 	if ( isset( $_REQUEST['member_homepage_redirect'] ) ) {
 		update_option( 'pmpro_member_homepage_redirect_' . absint( $level_id ), absint( $_REQUEST['member_homepage_redirect'] ) );
+	}
+	if ( isset( $_REQUEST['member_homepage_ignore_redirect_to'] ) ) {
+		update_option( 'pmpro_member_homepage_ignore_redirect_to_' . absint( $level_id ), absint( $_REQUEST['member_homepage_ignore_redirect_to'] ) );
 	}
 }
 add_action("pmpro_save_membership_level", "pmpromh_pmpro_save_membership_level");
