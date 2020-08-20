@@ -188,7 +188,7 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 				</td>
 			</tr>
 			<tr>
-				<th scope="row" valign="top"><?php esc_html_e( 'Homepage Redirect', 'pmpro-member-homepages' ); ?>:</th>
+				<th scope="row" valign="top"><?php esc_html_e( 'Override Other Redirects', 'pmpro-member-homepages' ); ?>:</th>
 				<td>
 					<?php
 						$checked = filter_var( get_option( 'pmpro_member_homepage_ignore_redirect_to_' . $level_id, true ), FILTER_VALIDATE_BOOLEAN );
