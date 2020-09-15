@@ -10,16 +10,16 @@ Text Domain: pmpro-member-homepages
 Domain Path: /languages
 */
 
-define( 'PMPRO_MEMBER_HOMEPAGES_VERSION', '0.2' ); 
+define( 'PMPRO_MEMBER_HOMEPAGES_VERSION', '0.3' );
 
 /**
  * Load text domain
  * pmpromh_load_plugin_text_domain
  */
 function pmpromh_load_plugin_text_domain() {
-	load_plugin_textdomain( 'pmpro-member-homepages', false, basename( dirname( __FILE__ ) ) . '/languages' ); 
+	load_plugin_textdomain( 'pmpro-member-homepages', false, basename( dirname( __FILE__ ) ) . '/languages' );
 }
-add_action( 'init', 'pmpromh_load_plugin_text_domain' ); 
+add_action( 'init', 'pmpromh_load_plugin_text_domain' );
 
 /*
 	Function to redirect member on login to their membership level's homepage
@@ -43,19 +43,19 @@ function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 
 	return $redirect_to;
 }
-add_filter('login_redirect', 'pmpromh_login_redirect', 9, 3);
+add_filter( 'login_redirect', 'pmpromh_login_redirect', 9, 3 );
 
 /*
-	Function to redirect member to their membership level's homepage when 
+	Function to redirect member to their membership level's homepage when
 	trying to access your site's front page (static page or posts page).
 */
 
 function pmpromh_template_redirect_homepage() {
 	global $current_user;
 	//is there a user to check?
-	if( !empty($current_user->ID) && is_front_page() && pmpromh_allow_homepage_redirect() ) {
+	if ( ! empty( $current_user->ID ) && is_front_page() && pmpromh_allow_homepage_redirect() ) {
 		$member_homepage_id = pmpromh_getHomepageForLevel();
-		if(!empty($member_homepage_id) && !is_page( $member_homepage_id ) && ! empty( get_post( $member_homepage_id ) ) ) {
+		if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && ! empty( get_post( $member_homepage_id ) ) ) {
 			wp_redirect( get_permalink( $member_homepage_id ) );
 			exit;
 		}
@@ -92,17 +92,17 @@ function pmpromh_allow_homepage_redirect( $level_id = null ) {
 /*
 	Function to get a homepage for level
 */
-function pmpromh_getHomepageForLevel( $level_id = NULL ) {
-	if(empty($level_id) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
+function pmpromh_getHomepageForLevel( $level_id = null ) {
+	if ( empty( $level_id ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
 		global $current_user;
 		$level = pmpro_getMembershipLevelForUser( $current_user->ID );
-		if( !empty( $level ) ) {
+		if ( ! empty( $level ) ) {
 			$level_id = $level->id;
 		}
 	}
-	
+
 	//look up by level
-	if( !empty( $level_id ) ) {
+	if ( ! empty( $level_id ) ) {
 		$member_homepage_id = get_option( 'pmpro_member_homepage_' . $level_id );
 	} else {
 		$member_homepage_id = false;
@@ -155,7 +155,7 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 	?>
 	<hr />
 	<h3><?php esc_html_e( 'Membership Homepage', 'pmpro-member-homepages' ); ?></h3>
-	<p><?php _e( "Use these settings to redirect members to a specific page on login or any time they visit your site's homepage/frontpage.", 'pmpro-member-homepages' );?></p>
+	<p><?php esc_html_e( "Use these settings to redirect members to a specific page on login or any time they visit your site's homepage/frontpage.", 'pmpro-member-homepages' ); ?></p>
 	<table>
 		<tbody class="form-table">
 			<tr>
@@ -174,7 +174,7 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 						)
 					);
 					?>
-					<p class="description"><?php _e( 'Unless another "redirect_to" value is set, members of this level will be redirected to this page on login.', 'pmpro-member-homepages' );?></p>
+					<p class="description"><?php esc_html_e( 'Unless another "redirect_to" value is set, members of this level will be redirected to this page on login.', 'pmpro-member-homepages' ); ?></p>
 				</td>
 			</tr>
 			<tr>
@@ -206,10 +206,10 @@ add_action( 'pmpro_membership_level_after_other_settings', 'pmpromh_pmpro_member
 /*
 	Save the member homepage.
 */
-function pmpromh_pmpro_save_membership_level($level_id)
-{
-	if(isset($_REQUEST['member_homepage_id']))
-		update_option('pmpro_member_homepage_' . $level_id, $_REQUEST['member_homepage_id']);
+function pmpromh_pmpro_save_membership_level( $level_id ) {
+	if ( isset( $_REQUEST['member_homepage_id'] ) ) {
+		update_option( 'pmpro_member_homepage_' . $level_id, $_REQUEST['member_homepage_id'] );
+	}
 	if ( isset( $_REQUEST['member_homepage_redirect'] ) ) {
 		update_option( 'pmpro_member_homepage_redirect_' . absint( $level_id ), absint( $_REQUEST['member_homepage_redirect'] ) );
 	}
@@ -217,19 +217,19 @@ function pmpromh_pmpro_save_membership_level($level_id)
 		update_option( 'pmpro_member_homepage_ignore_redirect_to_' . absint( $level_id ), absint( $_REQUEST['member_homepage_ignore_redirect_to'] ) );
 	}
 }
-add_action("pmpro_save_membership_level", "pmpromh_pmpro_save_membership_level");
+add_action( 'pmpro_save_membership_level', 'pmpromh_pmpro_save_membership_level' );
 
 /*
 	Function to add links to the plugin row meta
 */
-function pmpromh_plugin_row_meta($links, $file) {
-	if( strpos($file, 'pmpro-member-homepages.php') !== false ) {
+function pmpromh_plugin_row_meta( $links, $file ) {
+	if ( strpos( $file, 'pmpro-member-homepages.php' ) !== false ) {
 		$new_links = array(
-			'<a href="' . esc_url('https://www.paidmembershipspro.com/add-ons/member-homepages/')  . '" title="' . esc_attr( __( 'View Documentation', 'pmpro-member-homepages' ) ) . '">' . __( 'Docs', 'pmpro-member-homepages' ) . '</a>',
-			'<a href="' . esc_url('https://www.paidmembershipspro.com/support/') . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmpro-member-homepages' ) ) . '">' . __( 'Support', 'pmpro-member-homepages' ) . '</a>',
+			'<a href="' . esc_url( 'https://www.paidmembershipspro.com/add-ons/member-homepages/' ) . '" title="' . esc_attr( __( 'View Documentation', 'pmpro-member-homepages' ) ) . '">' . __( 'Docs', 'pmpro-member-homepages' ) . '</a>',
+			'<a href="' . esc_url( 'https://www.paidmembershipspro.com/support/' ) . '" title="' . esc_attr( __( 'Visit Customer Support Forum', 'pmpro-member-homepages' ) ) . '">' . __( 'Support', 'pmpro-member-homepages' ) . '</a>',
 		);
-		$links = array_merge($links, $new_links);
+		$links     = array_merge( $links, $new_links );
 	}
 	return $links;
 }
-add_filter('plugin_row_meta', 'pmpromh_plugin_row_meta', 10, 2);
+add_filter( 'plugin_row_meta', 'pmpromh_plugin_row_meta', 10, 2 );
