@@ -10,7 +10,7 @@ Text Domain: pmpro-member-homepages
 Domain Path: /languages
 */
 
-define( 'PMPRO_MEMBER_HOMEPAGES_VERSION', '0.2' );
+define( 'PMPRO_MEMBER_HOMEPAGES_VERSION', '0.3' );
 
 /**
  * Load text domain
