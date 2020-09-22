@@ -32,11 +32,25 @@ function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 
 		// Member has a level, does their level have a homepage?
 		if ( ! empty( $level ) && isset( $level->id ) ) {
-			$member_homepage_id = pmpromh_getHomepageForLevel( $level->id );
-			$ignore_redirect_to = pmpromh_ignore_redirect_to( $level->id );
-			// Member has a member homepage, override the redirect_to if level set to ignore other redirects.
-			if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && ! empty( $ignore_redirect_to ) ) {
-				$redirect_to = get_permalink( $member_homepage_id );
+			if ( is_multisite() ) {
+				$blog_id            = get_option( 'pmpro_member_homepage_blog_' . $level->id );
+				$page_id            = get_option( 'pmpro_member_homepage_' . $level->id );
+				$permalink          = get_blog_permalink( $blog_id, $page_id );
+				$ignore_redirect_to = pmpromh_ignore_redirect_to( $level->id );
+
+				if ( ! empty( $permalink && ! empty( $ignore_redirect_to ) ) ) {
+					$redirect_to = $permalink;
+					if ( defined( 'SUBDOMAIN_INSTALL' ) && false !== SUBDOMAIN_INSTALL ) {
+						$redirect_to = home_url();
+					}
+				}
+			} else {
+				$member_homepage_id = pmpromh_getHomepageForLevel( $level->id );
+				$ignore_redirect_to = pmpromh_ignore_redirect_to( $level->id );
+				// Member has a member homepage, override the redirect_to if level set to ignore other redirects.
+				if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && ! empty( $ignore_redirect_to ) ) {
+					$redirect_to = get_permalink( $member_homepage_id );
+				}
 			}
 		}
 	}
@@ -54,10 +68,21 @@ function pmpromh_template_redirect_homepage() {
 	global $current_user;
 	//is there a user to check?
 	if ( ! empty( $current_user->ID ) && is_front_page() && pmpromh_allow_homepage_redirect() ) {
-		$member_homepage_id = pmpromh_getHomepageForLevel();
-		if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && ! empty( get_post( $member_homepage_id ) ) ) {
-			wp_redirect( get_permalink( $member_homepage_id ) );
-			exit;
+		if ( is_multisite() ) {
+			$level     = pmpro_getMembershipLevelForUser( $current_user->ID );
+			$blog_id   = get_option( 'pmpro_member_homepage_blog_' . $level->id );
+			$page_id   = get_option( 'pmpro_member_homepage_' . $level->id );
+			$permalink = get_blog_permalink( $blog_id, $page_id );
+			if ( ! empty( $permalink ) ) {
+				wp_redirect( $permalink );
+				exit;
+			}
+		} else {
+			$member_homepage_id = pmpromh_getHomepageForLevel();
+			if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && ! empty( get_post( $member_homepage_id ) ) ) {
+				wp_redirect( get_permalink( $member_homepage_id ) );
+				exit;
+			}
 		}
 	}
 }
@@ -155,14 +180,70 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 	?>
 	<hr />
 	<h3><?php esc_html_e( 'Membership Homepage', 'pmpro-member-homepages' ); ?></h3>
-	<p><?php esc_html_e( "Use these settings to redirect members to a specific page on login or any time they visit your site's homepage/frontpage.", 'pmpro-member-homepages' ); ?></p>
+	<p><?php _e( "Use these settings to redirect members to a specific page on login or any time they visit your site's homepage/frontpage.", 'pmpro-member-homepages' ); ?></p>
 	<table>
 		<tbody class="form-table">
+			<?php
+			$level_id = absint( filter_input( INPUT_GET, 'edit', FILTER_DEFAULT ) );
+
+			if ( is_multisite() ) {
+				?>
+			<tr>
+				<th scope="row" valign="top"><label for="member_homepage"><?php esc_html_e( 'Select Site', 'pmpro-member-homepages' ); ?>:</label></th>
+				<td>
+					<select name='pmpromh_multisite_select' id='pmpromh_multisite_select'>
+					<?php
+
+						$multisite = get_option( 'pmpro_member_homepage_blog_' . $level_id );
+						$sites     = get_sites();
+
+					if ( ! empty( $sites ) ) {
+						foreach ( $sites as $site ) {
+							?>
+								<option value='<?php echo $site->blog_id; ?>' <?php selected( $multisite, $site->blog_id ); ?>><?php echo $site->blogname; ?></option>
+								<?php
+						}
+					}
+					?>
+					</select>
+					<p class="description"><?php esc_html_e( 'Select which multisite home page you\'d like to use.', 'pmpro-member-homepages' ); ?></p>
+				</td>
+			</tr>
+			<tr class='pmpromh_multisite_pages_row'>
+				<th scope="row" valign="top"><label for="member_homepage"><?php esc_html_e( 'Member Homepage', 'pmpro-member-homepages' ); ?>:</label></th>
+				<td>
+					<!--We'll populate this with JS -->
+					<select name='member_homepage_id' id='pmpromh_multisite_pages'>
+						<?php
+						if ( ! empty( $multisite ) ) {
+							$pages = pmpromh_return_blog_pages( $multisite );
+						} else {
+							//Get the first site and it's pages
+							if ( ! empty( $sites ) ) {
+								$pages = pmpromh_return_blog_pages( $sites[0]->blog_id );
+							} else {
+								$pages = array();
+							}
+						}
+
+						if ( ! empty( $pages ) ) {
+							foreach ( $pages as $key => $val ) {
+								echo "<option value='$key'>$val</option>";
+							}
+						} else {
+							echo "<option value=''>" . __( 'No Pages Found', 'pmpro-member-homepages' ) . '</option>';
+						}
+						?>
+					</select>
+					<p class="description"><?php _e( 'Unless another "redirect_to" value is set, members of this level will be redirected to this page on login.', 'pmpro-member-homepages' ); ?></p>
+				</td>
+			</tr>
+			<?php } else { ?>
 			<tr>
 				<th scope="row" valign="top"><label for="member_homepage"><?php esc_html_e( 'Member Homepage', 'pmpro-member-homepages' ); ?>:</label></th>
 				<td>
 					<?php
-						$level_id           = absint( filter_input( INPUT_GET, 'edit', FILTER_DEFAULT ) );
+
 						$member_homepage_id = pmpromh_getHomepageForLevel( $level_id );
 					?>
 					<?php
@@ -174,9 +255,10 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 						)
 					);
 					?>
-					<p class="description"><?php esc_html_e( 'Unless another "redirect_to" value is set, members of this level will be redirected to this page on login.', 'pmpro-member-homepages' ); ?></p>
+					<p class="description"><?php _e( 'Unless another "redirect_to" value is set, members of this level will be redirected to this page on login.', 'pmpro-member-homepages' ); ?></p>
 				</td>
 			</tr>
+			<?php } ?>
 			<tr>
 				<th scope="row" valign="top"><?php esc_html_e( 'Homepage Redirect', 'pmpro-member-homepages' ); ?>:</th>
 				<td>
@@ -187,21 +269,72 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 					<input type="checkbox" value="1" id="member_homepage_redirect" name="member_homepage_redirect" <?php checked( true, $checked, true ); ?> /> <label for="member_homepage_redirect"><?php esc_html_e( "Check to have members always redirected away from your site's homepage/frontpage.", 'pmpro-member-homepages' ); ?></label>
 				</td>
 			</tr>
-			<tr>
-				<th scope="row" valign="top"><?php esc_html_e( 'Override Other Redirects', 'pmpro-member-homepages' ); ?>:</th>
-				<td>
-					<?php
-						$checked = filter_var( get_option( 'pmpro_member_homepage_ignore_redirect_to_' . $level_id, true ), FILTER_VALIDATE_BOOLEAN );
-					?>
-					<input type="hidden" value="0" name="member_homepage_ignore_redirect_to" />
-					<input type="checkbox" value="1" id="member_homepage_ignore_redirect_to" name="member_homepage_ignore_redirect_to" <?php checked( true, $checked, true ); ?> /> <label for="member_homepage_ignore_redirect_to"><?php esc_html_e( 'Check to ignore other "redirect_to" values on login and always redirect members to their homepage on login', 'pmpro-member-homepages' ); ?></label>
-				</td>
-			</tr>
 		</tbody>
 	</table>
 	<?php
 }
 add_action( 'pmpro_membership_level_after_other_settings', 'pmpromh_pmpro_membership_level_after_other_settings' );
+
+/**
+ * Load a JS file to detect changes in the dropdown for multisites
+ */
+function pmpromh_load_admin_scripts() {
+
+	wp_enqueue_script( 'pmpromh-admin-script', plugins_url( 'js/admin.js', __FILE__ ) );
+	wp_localize_script( 'pmpromh-admin-script', 'pmpromh_nonce', wp_create_nonce( 'pmpromh-nonce' ) );
+	wp_localize_script( 'pmpromh-admin-script', 'pmpromh_ajaxurl', admin_url( 'admin-ajax.php' ) );
+}
+add_action( 'admin_enqueue_scripts', 'pmpromh_load_admin_scripts' );
+
+function pmpromh_multisite_dropdown_pages() {
+
+	if ( ! empty( $_POST['action'] ) && $_POST['action'] == 'pmpromh_get_blog_pages' ) {
+
+		if ( ! wp_verify_nonce( $_POST['security'], 'pmpromh-nonce' ) ) {
+			die();
+		}
+
+		$blog_id = intval( $_REQUEST['site_id'] );
+
+		if ( ! empty( $blog_id ) ) {
+
+			$pages = pmpromh_return_blog_pages( $blog_id );
+
+			echo json_encode( $pages );
+
+			wp_die();
+		}
+	}
+
+}
+add_action( 'wp_ajax_pmpromh_get_blog_pages', 'pmpromh_multisite_dropdown_pages' );
+
+function pmpromh_return_blog_pages( $blog_id ) {
+
+	$pages = array();
+
+	if ( ! empty( $blog_id ) ) {
+
+		switch_to_blog( $blog_id );
+
+		$posts = get_posts(
+			array(
+				'posts_per_page' => -1,
+				'post_type'      => 'page',
+			)
+		);
+
+		if ( ! empty( $posts ) ) {
+
+			foreach ( $posts as $post ) {
+				$pages[ $post->ID ] = $post->post_title;
+			}
+		}
+	}
+
+	return $pages;
+
+}
 
 /*
 	Save the member homepage.
