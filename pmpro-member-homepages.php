@@ -35,7 +35,7 @@ function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 			$member_homepage_id = pmpromh_getHomepageForLevel( $level->id );
 			$ignore_redirect_to = pmpromh_ignore_redirect_to( $level->id );
 			// Member has a member homepage, override the redirect_to if level set to ignore other redirects.
-			if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && ! empty( $ignore_redirect_to ) ) {
+			if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && ( empty( $redirect_to ) || ! empty( $ignore_redirect_to ) ) ) {
 				$redirect_to = get_permalink( $member_homepage_id );
 			}
 		}
