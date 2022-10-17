@@ -27,13 +27,13 @@ add_action( 'init', 'pmpromh_load_plugin_text_domain' );
 function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 
 	// Check level
-	if ( ! empty( $user ) && ! empty( $user->ID ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
-		$level = pmpro_getMembershipLevelForUser( $user->ID );
+	if ( ! empty( $user ) && ! empty( $user->ID ) ) {
+		$level_id = pmpromh_get_homepage_level_for_user( $user->ID );
 
 		// Member has a level, does their level have a homepage?
-		if ( ! empty( $level ) && isset( $level->id ) ) {
-			$member_homepage_id = pmpromh_getHomepageForLevel( $level->id );
-			$ignore_redirect_to = pmpromh_ignore_redirect_to( $level->id );
+		if ( ! empty( $level_id ) ) {
+			$member_homepage_id = pmpromh_getHomepageForLevel( $level_id );
+			$ignore_redirect_to = pmpromh_ignore_redirect_to( $level_id );
 			// Member has a member homepage, override the redirect_to if level set to ignore other redirects.
 			if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && ( empty( $redirect_to ) || ! empty( $ignore_redirect_to ) ) ) {
 				$redirect_to = get_permalink( $member_homepage_id );
@@ -51,13 +51,18 @@ add_filter('login_redirect', 'pmpromh_login_redirect', 9, 3);
 */
 
 function pmpromh_template_redirect_homepage() {
-	global $current_user;
-	//is there a user to check?
-	if( !empty($current_user->ID) && is_front_page() && pmpromh_allow_homepage_redirect() ) {
-		$member_homepage_id = pmpromh_getHomepageForLevel();
-		if(!empty($member_homepage_id) && !is_page( $member_homepage_id ) && ! empty( get_post( $member_homepage_id ) ) ) {
-			wp_redirect( get_permalink( $member_homepage_id ) );
-			exit;
+	// Are we on the front page?
+	if ( is_front_page() ) {
+		// Get the hompage level for the current user.
+		$level_id = pmpromh_get_homepage_level_for_user();
+		if ( ! empty( $level_id ) && pmpromh_allow_homepage_redirect( $level_id ) ) {
+			// Get the homepage for this level.
+			$member_homepage_id = pmpromh_getHomepageForLevel( $level_id );
+			if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && ! empty( get_post( $member_homepage_id ) ) ) {
+				// Redirect to the member homepage.
+				wp_redirect( get_permalink( $member_homepage_id ) );
+				exit;
+			}
 		}
 	}
 }
@@ -71,12 +76,9 @@ add_action( 'template_redirect', 'pmpromh_template_redirect_homepage' );
  * @return bool true if yes, false if no.
  */
 function pmpromh_allow_homepage_redirect( $level_id = null ) {
-	if ( empty( $level_id ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
-		global $current_user;
-		$level = pmpro_getMembershipLevelForUser( $current_user->ID );
-		if ( ! empty( $level ) ) {
-			$level_id = $level->id;
-		}
+	if ( empty( $level_id ) ) {
+		_doing_it_wrong( __FUNCTION__, __( 'The level ID is required.', 'pmpro-member-homepages' ), 'TBD' );
+		$level_id = pmpromh_get_homepage_level_for_user();
 	}
 
 	// look up by level.
@@ -89,16 +91,50 @@ function pmpromh_allow_homepage_redirect( $level_id = null ) {
 	return $homepage_redirect;
 }
 
+/**
+ * Get the homepage level for the current user.
+ *
+ * @since TBD
+ *
+ * @param int|null $user_id The user ID to get the level for.
+ *
+ * @return int|null The ID of the level to get the homepage for, or null if none.
+ */
+function pmpromh_get_homepage_level_for_user( $user_id = null ) {
+	if ( empty( $user_id ) ) {
+		$user_id = get_current_user_id();
+	}
+
+	if ( function_exists( 'pmpro_getMembershipLevelsForUser' ) ) {
+		// Get all levels for the current user.
+		$user_levels    = pmpro_getMembershipLevelsForUser( $user_id );
+		$user_level_ids = wp_list_pluck( $user_levels, 'id' );
+
+		// Let sites filter the priority of levels that have homepages.
+		$prioritized_levels = apply_filters( 'pmpromh_prioritized_levels', array() );
+
+		// If the user doesn't have a prioritized level, we will still want to go through each
+		// of their levels so add them to the end of the array in any order.
+		$prioritized_levels = array_merge( $prioritized_levels, $user_level_ids );
+
+		// Loop through the prioritized levels and find the first one that the user has and that has a homepage.
+		foreach ( $prioritized_levels as $level_id ) {
+			if ( in_array( $level_id, $user_level_ids ) && ! empty( pmpromh_getHomepageForLevel( $level_id ) ) ) {
+				return $level_id;
+			}
+		}
+	}
+
+	return null;
+}
+
 /*
 	Function to get a homepage for level
 */
 function pmpromh_getHomepageForLevel( $level_id = NULL ) {
-	if(empty($level_id) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
-		global $current_user;
-		$level = pmpro_getMembershipLevelForUser( $current_user->ID );
-		if( !empty( $level ) ) {
-			$level_id = $level->id;
-		}
+	if ( empty( $level_id ) ) {
+		_doing_it_wrong( __FUNCTION__, __( 'The level ID is required.', 'pmpro-member-homepages' ), 'TBD' );
+		$level_id = pmpromh_get_homepage_level_for_user();
 	}
 	
 	//look up by level
@@ -130,12 +166,9 @@ function pmpromh_getHomepageForLevel( $level_id = NULL ) {
  * @return bool true if yes, false if no.
  */
 function pmpromh_ignore_redirect_to( $level_id = null ) {
-	if ( empty( $level_id ) && function_exists( 'pmpro_getMembershipLevelForUser' ) ) {
-		global $current_user;
-		$level = pmpro_getMembershipLevelForUser( $current_user->ID );
-		if ( ! empty( $level ) ) {
-			$level_id = $level->id;
-		}
+	if ( empty( $level_id ) ) {
+		_doing_it_wrong( __FUNCTION__, __( 'The level ID is required.', 'pmpro-member-homepages' ), 'TBD' );
+		$level_id = pmpromh_get_homepage_level_for_user();
 	}
 
 	// look up by level.
