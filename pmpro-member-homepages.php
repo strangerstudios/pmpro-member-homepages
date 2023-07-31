@@ -154,7 +154,7 @@ function pmpromh_ignore_redirect_to( $level_id = null ) {
 function pmpromh_pmpro_membership_level_after_other_settings() {
 	?>
 	<hr />
-	<h3><?php esc_html_e( 'Membership Homepage', 'pmpro-member-homepages' ); ?></h3>
+	<h2><?php esc_html_e( 'Membership Homepage', 'pmpro-member-homepages' ); ?></h2>
 	<p><?php _e( "Use these settings to redirect members to a specific page on login or any time they visit your site's homepage/frontpage.", 'pmpro-member-homepages' );?></p>
 	<table>
 		<tbody class="form-table">
