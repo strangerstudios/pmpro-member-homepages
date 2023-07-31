@@ -108,6 +108,11 @@ function pmpromh_getHomepageForLevel( $level_id = NULL ) {
 		$member_homepage_id = false;
 	}
 
+	// Add compatibility for Elementor Preview Mode/Editor for anyone that can edit posts.
+	if ( current_user_can( 'edit_posts' ) && \Elementor\Plugin::$instance->preview->is_preview_mode() ) {
+		$member_homepage_id = false;
+	}
+
 	/**
 	 * Filter to allow the Member Homepage ID to be set to any post ID, including a Custom Post Type.
 	 *
