@@ -252,6 +252,14 @@ function pmpromh_pmpro_save_membership_level($level_id)
 }
 add_action("pmpro_save_membership_level", "pmpromh_pmpro_save_membership_level");
 
+/**
+ * Compatibility with Elementor Preview Mode/Editor.
+ */
+function pmpromh_elementor_preview_mode_compatibility() {
+	remove_action( 'template_redirect', 'pmpromh_template_redirect_homepage' );
+}
+add_action( 'elementor/preview/init', 'pmpromh_elementor_preview_mode_compatibility' );
+
 /*
 	Function to add links to the plugin row meta
 */
