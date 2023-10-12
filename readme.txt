@@ -2,7 +2,7 @@
 Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, homepages, redirect, landing page, members
 Requires at least: 3.5
-Tested up to: 5.5
+Tested up to: 6.3
 Stable tag: 0.3
 
 Redirect members to a unique homepage or landing page based on their level.
