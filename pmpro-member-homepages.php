@@ -3,7 +3,7 @@
 Plugin Name: Paid Memberships Pro - Member Homepages Add On
 Plugin URI: https://www.paidmembershipspro.com/add-ons/member-homepages/
 Description: Redirect members to a unique homepage or landing page based on their level.
-Version: 0.3
+Version: 0.3.1
 Author: Paid Memberships Pro
 Author URI: https://www.paidmembershipspro.com
 Text Domain: pmpro-member-homepages

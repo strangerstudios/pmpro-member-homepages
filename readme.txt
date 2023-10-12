@@ -3,7 +3,7 @@ Contributors: strangerstudios
 Tags: paid memberships pro, pmpro, homepages, redirect, landing page, members
 Requires at least: 3.5
 Tested up to: 6.3
-Stable tag: 0.3
+Stable tag: 0.3.1
 
 Redirect members to a unique homepage or landing page based on their level.
 
@@ -29,6 +29,10 @@ Please post it in the issues section of GitHub and we'll fix it as soon as we ca
 Please visit our premium support site at https://www.paidmembershipspro.com for more documentation and our support forums.
 
 == Changelog ==
+= 0.3.1 - 2023-10-12 =
+* ENHANCEMENT: Adding filter `pmpromh_prioritized_levels` for compatibility with Multiple Memberships Per User. #27 (@dparker1005)
+* BUG FIX/ENHANCEMENT: Added compatibility with Elementor when trying to edit a static homepage. #30 (@andrewlimaza)
+* BUG FIX: Fixed issue where users would not be redirected to their member homepages on login if the “ignore redirect to” setting is disabled and the `$redirect_to` variable is not set for the login. #26 (@dparker1005)
 
 = 0.3 - 2020-08-19 =
 * FEATURE: Added a setting to ignore other `redirect_to` attributes and always override with the member homepage.
