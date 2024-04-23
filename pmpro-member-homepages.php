@@ -34,6 +34,21 @@ function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 		if ( ! empty( $level_id ) ) {
 			$member_homepage_id = pmpromh_getHomepageForLevel( $level_id );
 			$ignore_redirect_to = pmpromh_ignore_redirect_to( $level_id );
+
+			// Check if we're redirecting to a default login redirect path, if so, let's skip this since we want to redirect elsewhere.
+			if ( ! $ignore_redirect_to ) {
+				$skip_redirects = apply_filters( 'pmpromh_skip_redirect_urls',
+					array(
+						pmpro_url( 'login' ),
+						site_url( '/wp-admin/' )
+					)
+				);
+
+				// Trying to redirect_to a default URL, let's skip this and let our plugin handle the redirect.
+				if ( in_array( $redirect_to, $skip_redirects ) ) {
+					$redirect_to = false;
+				}
+			}
 			// Member has a member homepage, override the redirect_to if level set to ignore other redirects.
 			if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && ( empty( $redirect_to ) || ! empty( $ignore_redirect_to ) ) ) {
 				$redirect_to = get_permalink( $member_homepage_id );
@@ -43,7 +58,7 @@ function pmpromh_login_redirect( $redirect_to, $request, $user ) {
 
 	return $redirect_to;
 }
-add_filter('login_redirect', 'pmpromh_login_redirect', 9, 3);
+add_filter( 'login_redirect', 'pmpromh_login_redirect', 9, 3 );
 
 /*
 	Function to redirect member to their membership level's homepage when 
