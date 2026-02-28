@@ -188,7 +188,13 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 	?>
 	<hr />
 	<h3><?php esc_html_e( 'Membership Homepage', 'pmpro-member-homepages' ); ?></h3>
-	<p><?php _e( "Use these settings to redirect members to a specific page on login or any time they visit your site's homepage/frontpage.", 'pmpro-member-homepages' );?></p>
+	<p>
+		<?php _e( "Use these settings to redirect members to a specific page on login or any time they visit your site's homepage/frontpage.", 'pmpro-member-homepages' );?>
+		<?php
+		$member_homepages_link = '<a title="' . esc_attr__( 'Member Homepages Add On', 'pmpro-member-homepages' ) . '" target="_blank" rel="nofollow noopener" href="https://www.paidmembershipspro.com/add-ons/member-homepages/?utm_source=plugin&utm_medium=pmpro-member-homepages&utm_campaign=add-ons&utm_content=&utm_term=">' . esc_html__( 'Member Homepages', 'pmpro-member-homepages' ) . '</a>';
+		printf( esc_html__( 'Learn more about %s.', 'pmpro-member-homepages' ), $member_homepages_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		?>
+	</p>
 	<table>
 		<tbody class="form-table">
 			<tr>
