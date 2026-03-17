@@ -187,12 +187,18 @@ function pmpromh_ignore_redirect_to( $level_id = null ) {
 function pmpromh_pmpro_membership_level_after_other_settings() {
 	?>
 	<hr />
-	<h3><?php esc_html_e( 'Membership Homepage', 'pmpro-member-homepages' ); ?></h3>
-	<p><?php _e( "Use these settings to redirect members to a specific page on login or any time they visit your site's homepage/frontpage.", 'pmpro-member-homepages' );?></p>
+	<h2><?php esc_html_e( 'Membership Homepage', 'pmpro-member-homepages' ); ?></h2>
+	<p>
+		<?php esc_html_e( "Use these settings to redirect members to a specific page on login or any time they visit your site's homepage/frontpage.", 'pmpro-member-homepages' );?>
+		<?php
+		$member_homepages_link = '<a title="' . esc_attr__( 'Member Homepages Add On Documentation', 'pmpro-member-homepages' ) . '" target="_blank" rel="nofollow noopener" href="https://www.paidmembershipspro.com/add-ons/member-homepages/?utm_source=plugin&utm_medium=pmpro-member-homepages&utm_campaign=add-ons">' . esc_html__( 'Member Homepages', 'pmpro-member-homepages' ) . '</a>';
+		printf( esc_html__( 'Learn more about %s.', 'pmpro-member-homepages' ), $member_homepages_link ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		?>
+	</p>
 	<table>
 		<tbody class="form-table">
 			<tr>
-				<th scope="row" valign="top"><label for="member_homepage"><?php esc_html_e( 'Member Homepage', 'pmpro-member-homepages' ); ?>:</label></th>
+				<th scope="row" valign="top"><label for="member_homepage_id"><?php esc_html_e( 'Member Homepage', 'pmpro-member-homepages' ); ?></label></th>
 				<td>
 					<?php
 						$level_id           = absint( filter_input( INPUT_GET, 'edit', FILTER_DEFAULT ) );
@@ -207,11 +213,11 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 						)
 					);
 					?>
-					<p class="description"><?php _e( 'Unless another "redirect_to" value is set, members of this level will be redirected to this page on login.', 'pmpro-member-homepages' );?></p>
+					<p class="description"><?php esc_html_e( 'Unless another "redirect_to" value is set, members of this level will be redirected to this page on login.', 'pmpro-member-homepages' );?></p>
 				</td>
 			</tr>
 			<tr>
-				<th scope="row" valign="top"><?php esc_html_e( 'Homepage Redirect', 'pmpro-member-homepages' ); ?>:</th>
+				<th scope="row" valign="top"><label for="member_homepage_redirect"><?php esc_html_e( 'Homepage Redirect', 'pmpro-member-homepages' ); ?></label></th>
 				<td>
 					<?php
 						$checked = filter_var( get_option( 'pmpro_member_homepage_redirect_' . $level_id, true ), FILTER_VALIDATE_BOOLEAN );
@@ -221,7 +227,7 @@ function pmpromh_pmpro_membership_level_after_other_settings() {
 				</td>
 			</tr>
 			<tr>
-				<th scope="row" valign="top"><?php esc_html_e( 'Override Other Redirects', 'pmpro-member-homepages' ); ?>:</th>
+				<th scope="row" valign="top"><label for="member_homepage_ignore_redirect_to"><?php esc_html_e( 'Override Other Redirects', 'pmpro-member-homepages' ); ?></label></th>
 				<td>
 					<?php
 						$checked = filter_var( get_option( 'pmpro_member_homepage_ignore_redirect_to_' . $level_id, true ), FILTER_VALIDATE_BOOLEAN );
