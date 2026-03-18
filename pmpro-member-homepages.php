@@ -58,7 +58,7 @@ function pmpromh_template_redirect_homepage() {
 			return;
 		}
 
-		// Get the hompage level for the current user.
+		// Get the homepage level for the current user.
 		$level_id = pmpromh_get_homepage_level_for_user();
 		if ( ! empty( $level_id ) && pmpromh_allow_homepage_redirect( $level_id ) ) {
 			// Get the homepage for this level.
