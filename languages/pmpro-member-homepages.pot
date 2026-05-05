@@ -1,93 +1,111 @@
-# Copyright (C) 2023 Paid Memberships Pro
+# Copyright (C) 2026 Paid Memberships Pro
 # This file is distributed under the same license as the Paid Memberships Pro - Member Homepages Add On plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Paid Memberships Pro - Member Homepages Add On 0.3\n"
+"Project-Id-Version: Paid Memberships Pro - Member Homepages Add On 0.3.2\n"
 "Report-Msgid-Bugs-To: info@paidmembershipspro.com\n"
 "Last-Translator: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "Language-Team: Paid Memberships Pro <info@paidmembershipspro.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-10-12T19:17:08+00:00\n"
+"POT-Creation-Date: 2026-05-05T14:16:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.8.1\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: pmpro-member-homepages\n"
 
 #. Plugin Name of the plugin
+#: pmpro-member-homepages.php
 msgid "Paid Memberships Pro - Member Homepages Add On"
 msgstr ""
 
 #. Plugin URI of the plugin
+#: pmpro-member-homepages.php
 msgid "https://www.paidmembershipspro.com/add-ons/member-homepages/"
 msgstr ""
 
 #. Description of the plugin
+#: pmpro-member-homepages.php
 msgid "Redirect members to a unique homepage or landing page based on their level."
 msgstr ""
 
 #. Author of the plugin
+#: pmpro-member-homepages.php
 msgid "Paid Memberships Pro"
 msgstr ""
 
 #. Author URI of the plugin
+#: pmpro-member-homepages.php
 msgid "https://www.paidmembershipspro.com"
 msgstr ""
 
-#: pmpro-member-homepages.php:80
-#: pmpro-member-homepages.php:136
-#: pmpro-member-homepages.php:170
+#: pmpro-member-homepages.php:85
+#: pmpro-member-homepages.php:141
+#: pmpro-member-homepages.php:175
 msgid "The level ID is required."
 msgstr ""
 
-#: pmpro-member-homepages.php:190
+#: pmpro-member-homepages.php:195
 msgid "Membership Homepage"
 msgstr ""
 
-#: pmpro-member-homepages.php:191
+#: pmpro-member-homepages.php:197
 msgid "Use these settings to redirect members to a specific page on login or any time they visit your site's homepage/frontpage."
 msgstr ""
 
-#: pmpro-member-homepages.php:195
+#: pmpro-member-homepages.php:199
+msgid "Member Homepages Add On Documentation"
+msgstr ""
+
+#: pmpro-member-homepages.php:199
+msgid "Member Homepages"
+msgstr ""
+
+#: pmpro-member-homepages.php:200
+#, php-format
+msgid "Learn more about %s."
+msgstr ""
+
+#: pmpro-member-homepages.php:206
 msgid "Member Homepage"
 msgstr ""
 
-#: pmpro-member-homepages.php:205
+#: pmpro-member-homepages.php:216
 msgid "Choose One"
 msgstr ""
 
-#: pmpro-member-homepages.php:210
+#: pmpro-member-homepages.php:221
 msgid "Unless another \"redirect_to\" value is set, members of this level will be redirected to this page on login."
 msgstr ""
 
-#: pmpro-member-homepages.php:214
+#: pmpro-member-homepages.php:225
 msgid "Homepage Redirect"
 msgstr ""
 
-#: pmpro-member-homepages.php:220
+#: pmpro-member-homepages.php:231
 msgid "Check to have members always redirected away from your site's homepage/frontpage."
 msgstr ""
 
-#: pmpro-member-homepages.php:224
+#: pmpro-member-homepages.php:235
 msgid "Override Other Redirects"
 msgstr ""
 
-#: pmpro-member-homepages.php:230
+#: pmpro-member-homepages.php:241
 msgid "Check to ignore other \"redirect_to\" values on login and always redirect members to their homepage on login"
 msgstr ""
 
-#: pmpro-member-homepages.php:269
+#: pmpro-member-homepages.php:280
 msgid "View Documentation"
 msgstr ""
 
-#: pmpro-member-homepages.php:269
+#: pmpro-member-homepages.php:280
 msgid "Docs"
 msgstr ""
 
-#: pmpro-member-homepages.php:270
+#: pmpro-member-homepages.php:281
 msgid "Visit Customer Support Forum"
 msgstr ""
 
-#: pmpro-member-homepages.php:270
+#: pmpro-member-homepages.php:281
 msgid "Support"
 msgstr ""
