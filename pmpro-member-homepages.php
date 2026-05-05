@@ -53,7 +53,12 @@ add_filter('login_redirect', 'pmpromh_login_redirect', 9, 3);
 function pmpromh_template_redirect_homepage() {
 	// Are we on the front page?
 	if ( is_front_page() ) {
-		// Get the hompage level for the current user.
+		// Bail if WP is performing a loopback to the front page.
+		if ( defined( 'WP_SANDBOX_SCRAPING' ) && WP_SANDBOX_SCRAPING ) {
+			return;
+		}
+
+		// Get the homepage level for the current user.
 		$level_id = pmpromh_get_homepage_level_for_user();
 		if ( ! empty( $level_id ) && pmpromh_allow_homepage_redirect( $level_id ) ) {
 			// Get the homepage for this level.
