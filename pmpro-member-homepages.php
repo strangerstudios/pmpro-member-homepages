@@ -3,14 +3,14 @@
 Plugin Name: Paid Memberships Pro - Member Homepages Add On
 Plugin URI: https://www.paidmembershipspro.com/add-ons/member-homepages/
 Description: Redirect members to a unique homepage or landing page based on their level.
-Version: 0.3.1
+Version: 0.3.2
 Author: Paid Memberships Pro
 Author URI: https://www.paidmembershipspro.com
 Text Domain: pmpro-member-homepages
 Domain Path: /languages
 */
 
-define( 'PMPRO_MEMBER_HOMEPAGES_VERSION', '0.2' ); 
+define( 'PMPRO_MEMBER_HOMEPAGES_VERSION', '0.3.2' ); 
 
 /**
  * Load text domain
@@ -99,7 +99,7 @@ function pmpromh_allow_homepage_redirect( $level_id = null ) {
 /**
  * Get the homepage level for the current user.
  *
- * @since TBD
+ * @since 0.3.1
  *
  * @param int|null $user_id The user ID to get the level for.
  *
