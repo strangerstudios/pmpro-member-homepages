@@ -10,6 +10,10 @@ Text Domain: pmpro-member-homepages
 Domain Path: /languages
 */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 define( 'PMPRO_MEMBER_HOMEPAGES_VERSION', '0.3.2' ); 
 
 /**
@@ -65,7 +69,7 @@ function pmpromh_template_redirect_homepage() {
 			$member_homepage_id = pmpromh_getHomepageForLevel( $level_id );
 			if ( ! empty( $member_homepage_id ) && ! is_page( $member_homepage_id ) && ! empty( get_post( $member_homepage_id ) ) ) {
 				// Redirect to the member homepage.
-				wp_redirect( get_permalink( $member_homepage_id ) );
+				wp_redirect( get_permalink( $member_homepage_id ) ); // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect -- The homepage ID and permalink are filterable and may legitimately point offsite.
 				exit;
 			}
 		}
@@ -82,7 +86,7 @@ add_action( 'template_redirect', 'pmpromh_template_redirect_homepage' );
  */
 function pmpromh_allow_homepage_redirect( $level_id = null ) {
 	if ( empty( $level_id ) ) {
-		_doing_it_wrong( __FUNCTION__, __( 'The level ID is required.', 'pmpro-member-homepages' ), 'TBD' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'The level ID is required.', 'pmpro-member-homepages' ), 'TBD' );
 		$level_id = pmpromh_get_homepage_level_for_user();
 	}
 
@@ -138,7 +142,7 @@ function pmpromh_get_homepage_level_for_user( $user_id = null ) {
 */
 function pmpromh_getHomepageForLevel( $level_id = NULL ) {
 	if ( empty( $level_id ) ) {
-		_doing_it_wrong( __FUNCTION__, __( 'The level ID is required.', 'pmpro-member-homepages' ), 'TBD' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'The level ID is required.', 'pmpro-member-homepages' ), 'TBD' );
 		$level_id = pmpromh_get_homepage_level_for_user();
 	}
 	
@@ -172,7 +176,7 @@ function pmpromh_getHomepageForLevel( $level_id = NULL ) {
  */
 function pmpromh_ignore_redirect_to( $level_id = null ) {
 	if ( empty( $level_id ) ) {
-		_doing_it_wrong( __FUNCTION__, __( 'The level ID is required.', 'pmpro-member-homepages' ), 'TBD' );
+		_doing_it_wrong( __FUNCTION__, esc_html__( 'The level ID is required.', 'pmpro-member-homepages' ), 'TBD' );
 		$level_id = pmpromh_get_homepage_level_for_user();
 	}
 
@@ -252,14 +256,16 @@ add_action( 'pmpro_membership_level_after_other_settings', 'pmpromh_pmpro_member
 */
 function pmpromh_pmpro_save_membership_level($level_id)
 {
+	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Runs on pmpro_save_membership_level; PMPro verifies the pmpro_membershiplevels_nonce with check_admin_referer() in adminpages/membershiplevels.php.
 	if(isset($_REQUEST['member_homepage_id']))
-		update_option('pmpro_member_homepage_' . $level_id, $_REQUEST['member_homepage_id']);
+		update_option('pmpro_member_homepage_' . $level_id, intval( $_REQUEST['member_homepage_id'] ) );
 	if ( isset( $_REQUEST['member_homepage_redirect'] ) ) {
 		update_option( 'pmpro_member_homepage_redirect_' . absint( $level_id ), absint( $_REQUEST['member_homepage_redirect'] ) );
 	}
 	if ( isset( $_REQUEST['member_homepage_ignore_redirect_to'] ) ) {
 		update_option( 'pmpro_member_homepage_ignore_redirect_to_' . absint( $level_id ), absint( $_REQUEST['member_homepage_ignore_redirect_to'] ) );
 	}
+	// phpcs:enable WordPress.Security.NonceVerification.Recommended
 }
 add_action("pmpro_save_membership_level", "pmpromh_pmpro_save_membership_level");
 
