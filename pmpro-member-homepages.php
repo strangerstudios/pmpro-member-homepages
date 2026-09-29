@@ -258,7 +258,7 @@ function pmpromh_pmpro_save_membership_level($level_id)
 {
 	// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Runs on pmpro_save_membership_level; PMPro verifies the pmpro_membershiplevels_nonce with check_admin_referer() in adminpages/membershiplevels.php.
 	if(isset($_REQUEST['member_homepage_id']))
-		update_option('pmpro_member_homepage_' . $level_id, intval( $_REQUEST['member_homepage_id'] ) );
+		update_option('pmpro_member_homepage_' . absint( $level_id ), absint( $_REQUEST['member_homepage_id'] ) );
 	if ( isset( $_REQUEST['member_homepage_redirect'] ) ) {
 		update_option( 'pmpro_member_homepage_redirect_' . absint( $level_id ), absint( $_REQUEST['member_homepage_redirect'] ) );
 	}
